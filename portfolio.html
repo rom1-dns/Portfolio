@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portfolio</title>
+  <link rel="icon" type="image/png" href="portfolio.png"
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #030305;
+      --bg-accent: #080812;
+      --card: rgba(13, 13, 25, 0.7);
+      --border: rgba(255, 255, 255, 0.08);
+      --cyan: #00f5d4;
+      --purple: #9b5de5;
+      --pink: #f72585;
+      --yellow: #f4d03f;
+      --text: #f0f0f5;
+      --muted: #8e8ea8;
+      --font-mono: 'JetBrains Mono', monospace;
+      --font-main: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-main);
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* ── BACKGROUND ── */
+    .bg-overlay { position: fixed; inset: 0; z-index: -1; background: radial-gradient(circle at 50% 50%, #111122 0%, #030305 100%); }
+    .grid-lines { position: fixed; inset: 0; z-index: -1; background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px); background-size: 50px 50px; mask-image: radial-gradient(circle at center, black, transparent 80%); opacity: 0.3; }
+
+    /* ── NAVIGATION ── */
+    nav { position: fixed; top: 0; width: 100%; z-index: 1000; display: flex; justify-content: space-between; align-items: center; padding: 20px 60px; background: rgba(3, 3, 5, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+    .nav-logo { font-family: var(--font-mono); font-weight: 800; font-size: 1.2rem; color: var(--cyan); }
+    .nav-logo span { color: var(--pink); }
+    nav ul { display: flex; list-style: none; gap: 30px; }
+    nav ul a { text-decoration: none; color: var(--muted); font-size: 0.85rem; font-weight: 500; transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+    nav ul a:hover { color: var(--cyan); }
+
+    /* ── HERO ── */
+    .hero { height: 100vh; display: flex; align-items: center; padding: 0 60px; position: relative; max-width: 1400px; margin: 0 auto; }
+    .hero-content { max-width: 900px; z-index: 10; }
+    .hero h1 { font-size: clamp(2.5rem, 7vw, 5rem); font-weight: 800; line-height: 1.1; margin-bottom: 20px; }
+    .hero h1 span.gradient { background: linear-gradient(90deg, var(--cyan), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero-desc { font-size: 1.2rem; color: var(--muted); max-width: 600px; margin-bottom: 40px; }
+
+    /* ── SECTIONS ── */
+    section { padding: 100px 60px; max-width: 1400px; margin: 0 auto; }
+    .section-num { font-family: var(--font-mono); color: var(--pink); font-size: 0.9rem; margin-bottom: 10px; display: block; }
+    .section-title { font-size: 2.5rem; font-weight: 800; margin-bottom: 50px; }
+    .section-title span { color: var(--cyan); }
+
+    /* ── CARDS ── */
+    .glass-card { background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 30px; transition: 0.4s ease; backdrop-filter: blur(5px); }
+    .glass-card:hover { border-color: var(--cyan); transform: translateY(-5px); background: rgba(13, 13, 25, 0.9); }
+    .skills-grid, .projects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; }
+
+    /* ── TAGS ── */
+    .tag-container { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 15px; }
+    .tag { font-family: var(--font-mono); font-size: 0.65rem; padding: 4px 10px; border-radius: 4px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--border); color: var(--muted); }
+    .tag.cyan { color: var(--cyan); border-color: rgba(0, 245, 212, 0.3); }
+    .tag.pink { color: var(--pink); border-color: rgba(247, 37, 133, 0.3); }
+    .tag.yellow { color: var(--yellow); border-color: rgba(244, 208, 63, 0.3); }
+    .tag.purple { color: var(--purple); border-color: rgba(155, 93, 229, 0.3); }
+
+    /* ── TIMELINE ── */
+    .timeline { position: relative; padding-left: 30px; }
+    .timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: linear-gradient(to bottom, var(--cyan), var(--purple), transparent); }
+    .timeline-item { position: relative; margin-bottom: 40px; background: var(--card); padding: 25px; border-radius: 12px; border: 1px solid var(--border); }
+    .timeline-item::after { content: ''; position: absolute; left: -34px; top: 25px; width: 8px; height: 8px; background: var(--cyan); border-radius: 50%; box-shadow: 0 0 10px var(--cyan); }
+    .tm-date { font-family: var(--font-mono); color: var(--pink); font-size: 0.75rem; margin-bottom: 5px; }
+    .tm-company { color: var(--cyan); font-weight: 700; margin-bottom: 10px; font-size: 1.1rem; }
+    .tm-desc ul { list-style: none; font-size: 0.9rem; color: var(--muted); }
+    .tm-desc li::before { content: "▹"; color: var(--cyan); margin-right: 8px; }
+
+    /* ── CONTACT (REWORKED) ── */
+    .contact-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+    
+    .contact-info { background: var(--bg-accent); padding: 40px; border-radius: 20px; border: 1px solid var(--border); }
+    .status-badge { display: inline-block; padding: 4px 12px; background: rgba(0, 245, 212, 0.1); border: 1px solid var(--cyan); color: var(--cyan); border-radius: 4px; font-family: var(--font-mono); font-size: 0.7rem; margin-bottom: 20px; }
+    .contact-intro { font-size: 1.1rem; margin-bottom: 30px; color: var(--text); }
+    
+    .search-details { display: grid; gap: 15px; }
+    .detail-item { padding-left: 15px; border-left: 2px solid var(--purple); }
+    .detail-label { display: block; font-family: var(--font-mono); font-size: 0.65rem; color: var(--muted); text-transform: uppercase; }
+    .detail-value { font-weight: 600; color: var(--text); font-size: 0.95rem; }
+
+    .contact-links { display: flex; flex-direction: column; gap: 15px; }
+    .contact-item { display: flex; align-items: center; gap: 20px; padding: 20px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; text-decoration: none; transition: 0.3s; }
+    .contact-item:hover { border-color: var(--pink); transform: translateX(10px); background: rgba(247, 37, 133, 0.05); }
+    .contact-icon { font-size: 1.5rem; }
+    .contact-text .label { display: block; font-family: var(--font-mono); font-size: 0.65rem; color: var(--muted); }
+    .contact-text .value { font-weight: 600; color: var(--text); font-size: 0.9rem; }
+
+    /* ── BUTTONS ── */
+    .btn { padding: 14px 28px; border-radius: 8px; font-weight: 600; text-decoration: none; font-size: 0.9rem; transition: 0.3s; display: inline-block; cursor: pointer; }
+    .btn-main { background: var(--cyan); color: var(--bg); border: none; }
+    .btn-main:hover { box-shadow: 0 0 20px rgba(0, 245, 212, 0.4); transform: translateY(-2px); }
+
+    footer { padding: 60px; text-align: center; border-top: 1px solid var(--border); color: var(--muted); font-family: var(--font-mono); font-size: 0.8rem; }
+
+    @media (max-width: 992px) {
+      .contact-wrapper { grid-template-columns: 1fr; }
+      nav { padding: 20px; }
+      nav ul { display: none; }
+      section { padding: 60px 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-overlay"></div>
+<div class="grid-lines"></div>
+
+<nav>
+  <div class="nav-logo">ROMAIN <span>DENIS</span></div>
+  <ul>
+    <li><a href="#competences">Compétences</a></li>
+    <li><a href="#experiences">Expérience</a></li>
+    <li><a href="#projets">Projets</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="status-badge">BIENVENUE SUR MON PORTFOLIO</div>
+    <h1><span class="gradient">Romain DENIS</span></h1>
+    <p class="hero-desc" align="justify">Étudiant en 3ème année de licence en Cybersécurité. Passionné par la sécurité, je mets mes compétences au service de la protection des systèmes et des données. Toujours en quête de nouveaux défis et de vulnérabilités à corriger.</p>
+    <div style="display: flex; gap: 20px;">
+      <a href="#competences" class="btn btn-main">Mes compétences</a>
+      <a href="#contact" class="btn" style="color: white; border: 1px solid var(--border);">Me contacter</a>
+    </div>
+  </div>
+</section>
+
+<section id="competences">
+  <div class="status-badge">01. </div>
+  <h2 class="section-title">Compétences <span>Techniques</span></h2>
+  <div class="skills-grid">
+    <div class="glass-card">
+      <h3 style="color:var(--cyan); margin-bottom:15px;">🌐 Réseaux & Sécurité</h3>
+		<span class="tag cyan">TCP/IP</span>
+        <span class="tag cyan">VPN</span>
+        <span class="tag cyan">Firewall</span>
+        <span class="tag cyan">DNS/DHCP/NAT-PAT</span>
+		<span class="tag cyan">OSPF</span>
+		<span class="tag cyan">RIP</span>
+		<span class="tag cyan">IPv4 et IPv6</span>
+      <div class="tag-container">
+        
+      </div>
+    </div>
+    <div class="glass-card">
+      <h3 style="color:var(--pink); margin-bottom:15px;">💻 Développement</h3>
+      <div class="tag-container">
+        <span class="tag pink">Python</span>
+        <span class="tag pink">Bash</span>
+        <span class="tag pink">C / C++</span>
+		<span class="tag pink">C#</span>
+		<span class="tag pink">JavaScript</span>
+		<span class="tag pink">PHP</span>
+		<span class="tag pink">CSS</span>
+		<span class="tag pink">HTML</span>
+		<span class="tag pink">SQL</span>
+        <span class="tag pink">PowerShell</span>
+      </div>
+    </div>
+    <div class="glass-card">
+      <h3 style="color:var(--yellow); margin-bottom:15px;">☁️ Système & Cloud</h3>
+      <div class="tag-container">
+        <span class="tag yellow">Linux</span> <span class="tag yellow">Windows Server</span>
+        <span class="tag yellow">Proxmox</span> <span class="tag yellow">Docker</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="experiences">
+  <div class="status-badge">02. </div>
+  <h2 class="section-title">Expériences <span>Professionnelles</span></h2>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="tm-date">SEPT. 2025 — AOÛT 2026</div>
+      <div class="tm-company">Stellantis — Alternant Cybersécurité</div>
+      <div class="tm-desc">
+        <ul>
+          <li>Administration et supervision des systèmes industriels.</li>
+          <li>Gestion des incidents IT et analyse des risques.</li>
+          <li>Traitement des vulnérabilités critiques.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="tm-date">SEPT.2015 — AUJOURDH'HUI</div>
+      <div class="tm-company">Cormelles JUDO — Bénévole</div>
+      <div class="tm-desc">
+        <ul>
+          <li>La mise en place des infrastructures lors des événements sportifs</li>
+		<li>Coacher les athlètes lors de compétions de judo ou jujitsu .</li>
+        </ul>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="tm-date">JUIN.2025 — AOÛT 2025</div>
+      <div class="tm-company">Leclerc — Employé CDD</div>
+      <div class="tm-desc">
+        <ul>
+          <li>Mise en rayon, gestion des stocks</li>
+		<li>Accueil et orientation des clients</li>
+		<li>Respect des règles d’hygiène et de sécurité</li>
+		</ul>
+
+      </div>
+    </div>
+  
+  
+	<div class="timeline-item">
+		<div class="tm-date">DEC.2024 — JAN.2025</div>
+		<div class="tm-company">McDonald's — Employé polyvalent</div>
+		<div class="tm-desc">
+			<ul>
+				<li>Accueil et service des clients en caisse et au comptoir</li>
+				<li>Préparation des commandes dans le respect des normes d’hygiène</li>
+				<li>Travail en équipe dans un environnement dynamique</li>
+			</ul>
+		</div>
+	</div>
+  
+	<div class="timeline-item">
+		<div class="tm-date">MAI.2024 — JUN.2024</div>
+		<div class="tm-company">Stellantis — Stagiaire en cybersécurité</div>
+		<div class="tm-desc">
+			<ul>
+				<li>Entretien du matériel informatique et formation des collaborateurs sur outils industriels.</li>
+				<li>Participation aux audits et création de supports techniques.</li>
+			</ul>
+
+		</div>
+	</div>
+	
+	<div class="timeline-item">
+		<div class="tm-date">Saison.2023 — Saison.2024</div>
+		<div class="tm-company">Festyland — Employé CDD</div>
+		<div class="tm-desc">
+			<ul>
+				<li>Employé polyvalent sur un point chaud</li>
+			</ul>
+
+		</div>
+	</div>
+	
+	<div class="timeline-item">
+		<div class="tm-date">NOV.2019 — NOV.2019</div>
+		<div class="tm-company">AIR PC DRIVE — Stage de découverte</div>
+		<div class="tm-desc">
+			<ul>
+				<li>Réparations de matériels informatique pour AIR PC DRIVE : télévisions, ordinateurs, téléphones.</li>
+				<li>Rédaction de devis.</li>
+			</ul>
+
+
+		</div>
+	</div>
+  </div>
+</section>
+
+<section id="projets">
+  <div class="status-badge">03. </div>
+  <h2 class="section-title">Projets <span>Réalisés</span></h2>
+  <div class="projects-grid">
+    <div class="glass-card">
+      <div class="tm-date">// RÉSEAU & SÉCURITÉ</div>
+      <h3 style="margin: 10px 0;">Projet Supervision</h3>
+      <p class="tm-desc" style="font-size: 0.85rem;" align="justify">J’ai conçu et déployé une infrastructure réseau entièrement fonctionnelle. Le projet incluait la création d’un plan d’adressage, la segmentation en VLAN, le routage inter‑VLAN, la mise en place d’un pare‑feu et l’installation des services essentiels (Active Directory, DHCP, DNS). J’ai également assuré la sécurisation du réseau avec le DHCP SNOOPING, ARP POISONING et aussi SPOOFING, VTP, Port Security. Mais aussi la configuration du Wi-Fi. L’ensemble de l'infrastructure a été documenté et testée pour garantir fiabilité et sécurité</p>
+      <div class="tag-container">
+        <span class="tag cyan">Routage - Inter VLAN</span>
+		<span class="tag cyan">Services</span>
+		<span class="tag cyan">Firewall</span>
+		<span class="tag cyan">AD</span>
+		<span class="tag cyan">Sécurité réseau</span>
+		<span class="tag cyan">Test</span>
+      </div>
+    </div>
+    <div class="glass-card">
+      <div class="tm-date">// DÉVELOPPEMENT .NET FRAMEWORK</div>
+      <h3 style="margin: 10px 0;">Service Syslog</h3>
+      <p class="tm-desc" style="font-size: 0.85rem;"align="justify">Développement d’une application Syslog en C# capable de recevoir, analyser et stocker les logs provenant des équipements du réseau (switchs, routeur, bornes WiFi, capteurs de température). L’application fonctionne sous la forme d’un service Windows, démarrant automatiquement avec le poste de supervision. Elle permet une centralisation fiable des journaux système pour faciliter la supervision et le diagnostic.</p>
+      <div class="tag-container">
+        <span class="tag pink">C#</span>
+        <span class="tag pink">.NET FRAMEWORK</span>
+        <span class="tag pink">Service Windows</span>
+      </div>
+	  <div class="project-links">
+        <a href="https://github.com/" class="project-link">GITHUB</a>
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="status-badge">04. </div>
+  <h2 class="section-title">Me <span>Contacter</span></h2>
+  
+  <div class="contact-wrapper">
+    <div class="contact-info">
+      <div class="status-badge">RECHERCHE ALTERNANCE</div>
+      <p class="contact-intro">Disponible pour échanger autour d'opportunités en Cybersécurité.</p>
+      
+      <div class="search-details">
+        <div class="detail-item">
+          <span class="detail-label">Objectif</span>
+          <span class="detail-value">Master Cybersécurité</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Date de début</span>
+          <span class="detail-value">01 Septembre 2026</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Localisation</span>
+          <span class="detail-value">France Métropolitaine</span>
+        </div>
+        <div class="detail-item">
+          <span class="detail-label">Durée</span>
+          <span class="detail-value">24 Mois</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-links">
+      <a href="mailto:romain.denis2005@gmail.com" class="contact-item">
+        <span class="contact-icon">📧</span>
+        <div class="contact-text">
+          <span class="label">Envoyer un mail</span>
+          <span class="value">romain.denis2005@gmail.com</span>
+        </div>
+      </a>
+
+      <a href="https://www.linkedin.com/in/romain-denis-265245262/" target="_blank" class="contact-item">
+  <span class="contact-icon">
+    <svg xmlns="http://www.w3.org/2000/svg"
+       width="22"
+       height="22"
+       viewBox="0 0 448 512"
+       fill="#0A66C2">
+      <path d="M100.28 448H7.4V148.9h92.88zm-46.44-341C24.3 107 0 82.7 0 53.5a53.5 53.5 0 0 1 107 0c0 29.2-24.3 53.5-53.16 53.5zM447.9 448h-92.4V302.4c0-34.7-.7-79.2-48.3-79.2-48.3 0-55.7 37.7-55.7 76.6V448h-92.5V148.9h88.8v40.8h1.3c12.4-23.5 42.6-48.3 87.6-48.3 93.7 0 111 61.6 111 141.7V448z"/>
+    </svg>
+  </span>
+  <div class="contact-text">
+    <span class="label">Mon profil LinkedIn</span>
+    <span class="value">LinkedIn</span>
+  </div>
+</a>
+
+      <a href="Romain_DENIS_CV_alternance.pdf" class="contact-item" download>
+        <span class="contact-icon">📄</span>
+        <div class="contact-text">
+          <span class="label">Voir mon Curriculum Vitae</span>
+          <span class="value">Télécharger mon CV (PDF)</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Romain DENIS | Master Cybersécurité Portfolio</p>
+</footer>
+
+</body>
+</html>
